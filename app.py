@@ -72,12 +72,14 @@ if uploaded_file is not None:
     # Display Transformed Image
     if transformed_img is not None:
         st.image(transformed_img, caption="Transformed Image", use_column_width=True)
-
+    
         # Download Button
         st.sidebar.title("Download Transformed Image")
         is_download = st.sidebar.button("Download Image")
         if is_download:
-            img_download = Image.fromarray(transformed_img)
+            # Ensure the array is in uint8 format and RGB mode
+            transformed_img = cv2.cvtColor(transformed_img, cv2.COLOR_BGR2RGB)
+            img_download = Image.fromarray(transformed_img.astype("uint8"))
             buf = io.BytesIO()
             img_download.save(buf, format="JPEG")
             byte_im = buf.getvalue()
